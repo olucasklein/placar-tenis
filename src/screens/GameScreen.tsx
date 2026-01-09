@@ -231,10 +231,10 @@ export const ScoreboardScreen: React.FC<Props> = ({
                     <Text style={styles.sectionLabel}>Adicionar Ponto</Text>
                     <View style={styles.pointRow}>
                       <TouchableOpacity style={[styles.pointBtn, { backgroundColor: matchState.leftTeam.color || '#3B82F6' }]} onPress={() => handlePoint('left')}>
-                        <Text style={styles.pointBtnText}>{leftName.split(' ')[0]}</Text>
+                        <Text style={styles.pointBtnText}>{leftName}</Text>
                       </TouchableOpacity>
                       <TouchableOpacity style={[styles.pointBtn, { backgroundColor: matchState.rightTeam.color || '#8B5CF6' }]} onPress={() => handlePoint('right')}>
-                        <Text style={styles.pointBtnText}>{rightName.split(' ')[0]}</Text>
+                        <Text style={styles.pointBtnText}>{rightName}</Text>
                       </TouchableOpacity>
                     </View>
 
