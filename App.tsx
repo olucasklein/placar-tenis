@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, StatusBar } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { PlayerSetupScreen as SetupScreen } from './src/screens/SetupScreen';
 import { ScoreboardScreen } from './src/screens/GameScreen';
@@ -69,24 +70,26 @@ export default function App() {
   }
 
   return (
-    <View style={styles.container}>
-      <StatusBar hidden />
-      {currentScreen === 'setup' && (
-        <SetupScreen
-          onStartMatch={handleStartMatch}
-          existingMatch={existingMatch}
-          onContinueMatch={handleContinueMatch}
-        />
-      )}
-      {currentScreen === 'scoreboard' && matchState && (
-        <ScoreboardScreen
-          matchState={matchState}
-          onMatchUpdate={handleMatchUpdate}
-          onFinishMatch={handleFinishMatch}
-          onNewMatch={handleNewMatch}
-        />
-      )}
-    </View>
+    <SafeAreaProvider>
+      <View style={styles.container}>
+        <StatusBar hidden />
+        {currentScreen === 'setup' && (
+          <SetupScreen
+            onStartMatch={handleStartMatch}
+            existingMatch={existingMatch}
+            onContinueMatch={handleContinueMatch}
+          />
+        )}
+        {currentScreen === 'scoreboard' && matchState && (
+          <ScoreboardScreen
+            matchState={matchState}
+            onMatchUpdate={handleMatchUpdate}
+            onFinishMatch={handleFinishMatch}
+            onNewMatch={handleNewMatch}
+          />
+        )}
+      </View>
+    </SafeAreaProvider>
   );
 }
 

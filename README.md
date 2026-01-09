@@ -87,8 +87,10 @@ Se usando **Expo Go**:
 
 ```bash
 # No PowerShell/CMD
-wsl -u root bash -c "export ANDROID_HOME=/usr/lib/android-sdk && cd /mnt/c/workspace/placar-tenis/android && ./gradlew clean assembleRelease --no-daemon"
+wsl -u root bash -c "export ANDROID_HOME=/usr/lib/android-sdk && cd /mnt/c/workspace/placar-tenis/android && ./gradlew assembleRelease --no-daemon"
 ```
+
+**⚠️ IMPORTANTE:** Use `assembleRelease` sem o `clean`. O comando `clean` causa erro com `react-native-safe-area-context` ao tentar limpar diretórios de codegen que ainda não existem.
 
 **Resultado:** `android/app/build/outputs/apk/release/app-release.apk` (58 MB)
 
@@ -169,13 +171,16 @@ placar-tenis/
 
 ## 🔧 Troubleshooting
 
+### Erro "externalNativeBuildCleanRelease FAILED"
+O comando `./gradlew clean` causa erro com a biblioteca `react-native-safe-area-context`. Use apenas `./gradlew assembleRelease` sem o `clean`.
+
 ### "useSafeAreaInsets is not exported"
-Certifique-se que está usando React Native 0.61+
+Certifique-se que `App.tsx` está envolvido com `<SafeAreaProvider>` da biblioteca `react-native-safe-area-context`.
 
 ### Build Gradle falha
 1. Verifique se `ANDROID_HOME` está configurado
 2. Reinicie o WSL: `wsl --shutdown`
-3. Limpe cache: `./gradlew clean`
+3. Use `./gradlew assembleRelease` (sem clean)
 
 ### APK não instala
 1. Desinstale versão anterior: `adb uninstall com.anonymous.techscore`
