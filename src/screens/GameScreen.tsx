@@ -9,6 +9,7 @@ import {
   Alert,
   Pressable,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { MatchState } from '../types';
@@ -34,6 +35,7 @@ export const ScoreboardScreen: React.FC<Props> = ({
   onFinishMatch,
   onNewMatch,
 }) => {
+  const insets = useSafeAreaInsets();
   const matchState = {
     ...rawState,
     leftTeam: rawState.leftTeam || { player1: { name: 'Jogador 1' } },
@@ -220,7 +222,7 @@ export const ScoreboardScreen: React.FC<Props> = ({
       )}
 
       {menuState !== 'none' && (
-        <View style={styles.sidePanel}>
+        <View style={[styles.sidePanel, { paddingBottom: Math.max(insets.bottom, 16) }]}>
           <ScrollView showsVerticalScrollIndicator={false}>
             {menuState === 'main' && (
               <>
@@ -266,6 +268,7 @@ export const ScoreboardScreen: React.FC<Props> = ({
                   <Ionicons name={matchState.isMatchStarted ? "stop-circle-outline" : "arrow-back"} size={18} color="#DC2626" />
                   <Text style={[styles.menuItemText, styles.dangerText]}>{matchState.isMatchStarted ? 'Finalizar' : 'Voltar pro Menu'}</Text>
                 </TouchableOpacity>
+                <View style={{ height: Math.max(insets.bottom, 16) }} />
               </>
             )}
 
