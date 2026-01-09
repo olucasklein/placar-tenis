@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   Modal,
   Alert,
+  Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as ScreenOrientation from 'expo-screen-orientation';
@@ -107,8 +108,12 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.logo}>🎾</Text>
-          <Text style={styles.title}>Placar de Tênis</Text>
+          <Image
+            source={require('../../assets/icon.png')}
+            style={styles.logoImage}
+            resizeMode="contain"
+          />
+          <Text style={styles.title}>TechScore</Text>
         </View>
 
         {/* Continue Match */}
@@ -346,8 +351,16 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   logo: {
-    fontSize: 40,
-    marginBottom: 4,
+    fontSize: 32,
+    fontWeight: '700',
+    color: '#C4E538',
+    marginBottom: 8,
+    letterSpacing: 1,
+  },
+  logoImage: {
+    width: 90,
+    height: 90,
+    marginBottom: 8,
   },
   title: {
     fontSize: 24,
