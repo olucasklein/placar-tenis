@@ -118,17 +118,32 @@ export const ScoreboardScreen: React.FC<Props> = ({
   };
 
   const handleFinish = () => {
-    Alert.alert('Finalizar', 'Tem certeza?', [
-      { text: 'Cancelar', style: 'cancel' },
-      { 
-        text: 'Sim', 
-        onPress: async () => { 
-          await saveMatchToHistory({ ...matchState, finishedAt: Date.now(), elapsedTime: displayTime });
-          await clearMatchState(); 
-          onFinishMatch(); 
-        }
-      },
-    ]);
+    if (!matchState.isMatchStarted) {
+      // Partida não começou, voltar para menu
+      Alert.alert('Voltar', 'Descartar esta partida?', [
+        { text: 'Cancelar', style: 'cancel' },
+        { 
+          text: 'Sim', 
+          onPress: async () => { 
+            await clearMatchState(); 
+            onNewMatch(); 
+          }
+        },
+      ]);
+    } else {
+      // Partida começou, finalizar normalmente
+      Alert.alert('Finalizar', 'Tem certeza?', [
+        { text: 'Cancelar', style: 'cancel' },
+        { 
+          text: 'Sim', 
+          onPress: async () => { 
+            await saveMatchToHistory({ ...matchState, finishedAt: Date.now(), elapsedTime: displayTime });
+            await clearMatchState(); 
+            onFinishMatch(); 
+          }
+        },
+      ]);
+    }
   };
 
   const handleNew = () => {
@@ -168,7 +183,7 @@ export const ScoreboardScreen: React.FC<Props> = ({
 
       <View style={styles.scoreArea}>
         <View style={styles.teamBox}>
-          <Text style={styles.teamName}>{leftName}</Text>
+          <Text style={[styles.teamName, { color: matchState.leftTeam.color || '#6B7280' }]}>{leftName}</Text>
           <Text style={styles.score}>{leftScore}</Text>
           <View style={styles.setsRow}>
             {(matchState.sets || []).map((s, i) => (
@@ -180,7 +195,7 @@ export const ScoreboardScreen: React.FC<Props> = ({
         <Text style={styles.vs}>VS</Text>
 
         <View style={styles.teamBox}>
-          <Text style={styles.teamName}>{rightName}</Text>
+          <Text style={[styles.teamName, { color: matchState.rightTeam.color || '#6B7280' }]}>{rightName}</Text>
           <Text style={styles.score}>{rightScore}</Text>
           <View style={styles.setsRow}>
             {(matchState.sets || []).map((s, i) => (
@@ -215,10 +230,10 @@ export const ScoreboardScreen: React.FC<Props> = ({
                   <>
                     <Text style={styles.sectionLabel}>Adicionar Ponto</Text>
                     <View style={styles.pointRow}>
-                      <TouchableOpacity style={[styles.pointBtn, styles.leftBtn]} onPress={() => handlePoint('left')}>
+                      <TouchableOpacity style={[styles.pointBtn, { backgroundColor: matchState.leftTeam.color || '#3B82F6' }]} onPress={() => handlePoint('left')}>
                         <Text style={styles.pointBtnText}>{leftName.split(' ')[0]}</Text>
                       </TouchableOpacity>
-                      <TouchableOpacity style={[styles.pointBtn, styles.rightBtn]} onPress={() => handlePoint('right')}>
+                      <TouchableOpacity style={[styles.pointBtn, { backgroundColor: matchState.rightTeam.color || '#8B5CF6' }]} onPress={() => handlePoint('right')}>
                         <Text style={styles.pointBtnText}>{rightName.split(' ')[0]}</Text>
                       </TouchableOpacity>
                     </View>
@@ -248,8 +263,8 @@ export const ScoreboardScreen: React.FC<Props> = ({
                 </TouchableOpacity>
 
                 <TouchableOpacity style={[styles.menuItem, styles.dangerItem]} onPress={handleFinish}>
-                  <Ionicons name="stop-circle-outline" size={18} color="#DC2626" />
-                  <Text style={[styles.menuItemText, styles.dangerText]}>Finalizar</Text>
+                  <Ionicons name={matchState.isMatchStarted ? "stop-circle-outline" : "arrow-back"} size={18} color="#DC2626" />
+                  <Text style={[styles.menuItemText, styles.dangerText]}>{matchState.isMatchStarted ? 'Finalizar' : 'Voltar pro Menu'}</Text>
                 </TouchableOpacity>
               </>
             )}
@@ -455,7 +470,7 @@ const styles = StyleSheet.create({
     borderLeftWidth: 1,
     borderLeftColor: '#E5E7EB',
     paddingTop: 16,
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
     zIndex: 2,
   },
   panelHeader: {
@@ -465,9 +480,10 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   panelTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '700',
     color: '#1A1A1A',
+    marginBottom: 16,
   },
   sectionLabel: {
     fontSize: 11,
@@ -479,13 +495,14 @@ const styles = StyleSheet.create({
   pointRow: {
     flexDirection: 'row',
     gap: 8,
-    marginBottom: 10,
+    marginBottom: 8,
   },
   pointBtn: {
     flex: 1,
-    paddingVertical: 10,
+    height: 40,
     borderRadius: 8,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   leftBtn: {
     backgroundColor: '#3B82F6',
@@ -503,36 +520,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
-    paddingVertical: 8,
+    height: 36,
     backgroundColor: '#FEF2F2',
-    borderRadius: 6,
-    marginBottom: 12,
+    borderRadius: 8,
+    marginBottom: 16,
   },
   undoText: {
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: '500',
     color: '#EF4444',
   },
   divider: {
     height: 1,
     backgroundColor: '#E5E7EB',
-    marginVertical: 12,
+    marginBottom: 16,
   },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 10,
+    height: 44,
+    paddingHorizontal: 12,
     backgroundColor: '#F9FAFB',
     borderRadius: 8,
-    marginBottom: 6,
+    marginBottom: 8,
   },
   dangerItem: {
     backgroundColor: '#FEF2F2',
   },
   menuItemText: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: '500',
     color: '#374151',
   },
@@ -542,7 +559,8 @@ const styles = StyleSheet.create({
   statRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 8,
+    alignItems: 'center',
+    height: 40,
     borderBottomWidth: 1,
     borderBottomColor: '#F3F4F6',
   },
@@ -557,7 +575,8 @@ const styles = StyleSheet.create({
   },
   historyItem: {
     flexDirection: 'row',
-    paddingVertical: 6,
+    alignItems: 'center',
+    height: 32,
     gap: 8,
   },
   historyTime: {
@@ -566,15 +585,15 @@ const styles = StyleSheet.create({
     width: 32,
   },
   leftText: {
-    fontSize: 12,
+    fontSize: 13,
     color: '#3B82F6',
   },
   rightText: {
-    fontSize: 12,
+    fontSize: 13,
     color: '#8B5CF6',
   },
   emptyText: {
-    fontSize: 12,
+    fontSize: 13,
     color: '#9CA3AF',
     textAlign: 'center',
     paddingVertical: 16,
@@ -584,22 +603,23 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#6B7280',
     textTransform: 'uppercase',
-    marginBottom: 4,
+    marginBottom: 6,
   },
   input: {
     backgroundColor: '#F9FAFB',
-    borderRadius: 6,
+    borderRadius: 8,
     paddingHorizontal: 12,
-    paddingVertical: 10,
+    height: 44,
     fontSize: 14,
     borderWidth: 1,
     borderColor: '#E5E7EB',
   },
   saveBtn: {
     backgroundColor: '#1A1A1A',
-    paddingVertical: 12,
+    height: 44,
     borderRadius: 8,
     alignItems: 'center',
+    justifyContent: 'center',
     marginTop: 16,
   },
   saveBtnText: {

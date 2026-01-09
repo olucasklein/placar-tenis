@@ -7,6 +7,7 @@ export interface Player {
 export interface Team {
   player1: Player;
   player2?: Player; // Para partidas de duplas
+  color?: string; // Cor customizável em hex (ex: #3B82F6)
 }
 
 export interface PointEvent {

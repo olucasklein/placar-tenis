@@ -27,13 +27,22 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
   existingMatch,
   onContinueMatch,
 }) => {
+  const COLORS = ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899'];
   const [isDoubles, setIsDoubles] = useState(false);
   const [team1Name, setTeam1Name] = useState('');
   const [team2Name, setTeam2Name] = useState('');
+  const [team1Color, setTeam1Color] = useState('#3B82F6');
+  const [team2Color, setTeam2Color] = useState('#8B5CF6');
   const [setsToWin, setSetsToWin] = useState(2);
   const [matchHistory, setMatchHistory] = useState<MatchState[]>([]);
   const [selectedMatch, setSelectedMatch] = useState<MatchState | null>(null);
   const [historyExpanded, setHistoryExpanded] = useState(true);
+
+  const cycleColor = (currentColor: string, setColor: (color: string) => void) => {
+    const currentIndex = COLORS.indexOf(currentColor);
+    const nextIndex = (currentIndex + 1) % COLORS.length;
+    setColor(COLORS[nextIndex]);
+  };
 
   useEffect(() => {
     ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP).catch(() => {});
@@ -50,6 +59,9 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
     const name2 = team2Name.trim() || (isDoubles ? 'Time 2' : 'Jogador 2');
 
     const matchState = createInitialMatchState(name1, name2, setsToWin);
+    
+    matchState.leftTeam.color = team1Color;
+    matchState.rightTeam.color = team2Color;
 
     if (isDoubles) {
       matchState.leftTeam.player2 = { name: 'Jogador 3' };
@@ -136,22 +148,34 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
 
           {/* Players */}
           <Text style={styles.label}>{isDoubles ? 'Time 1' : 'Jogador 1'}</Text>
-          <TextInput
-            style={styles.input}
-            placeholder={isDoubles ? "Nome do time" : "Nome do jogador"}
-            placeholderTextColor="#9CA3AF"
-            value={team1Name}
-            onChangeText={setTeam1Name}
-          />
+          <View style={styles.inputRow}>
+            <TextInput
+              style={[styles.input, styles.inputWithColor]}
+              placeholder={isDoubles ? "Nome do time" : "Nome do jogador"}
+              placeholderTextColor="#9CA3AF"
+              value={team1Name}
+              onChangeText={setTeam1Name}
+            />
+            <TouchableOpacity
+              style={[styles.colorDot, { backgroundColor: team1Color }]}
+              onPress={() => cycleColor(team1Color, setTeam1Color)}
+            />
+          </View>
 
           <Text style={[styles.label, { marginTop: 12 }]}>{isDoubles ? 'Time 2' : 'Jogador 2'}</Text>
-          <TextInput
-            style={styles.input}
-            placeholder={isDoubles ? "Nome do time" : "Nome do jogador"}
-            placeholderTextColor="#9CA3AF"
-            value={team2Name}
-            onChangeText={setTeam2Name}
-          />
+          <View style={styles.inputRow}>
+            <TextInput
+              style={[styles.input, styles.inputWithColor]}
+              placeholder={isDoubles ? "Nome do time" : "Nome do jogador"}
+              placeholderTextColor="#9CA3AF"
+              value={team2Name}
+              onChangeText={setTeam2Name}
+            />
+            <TouchableOpacity
+              style={[styles.colorDot, { backgroundColor: team2Color }]}
+              onPress={() => cycleColor(team2Color, setTeam2Color)}
+            />
+          </View>
 
           {/* Format */}
           <Text style={[styles.label, { marginTop: 12 }]}>Formato</Text>
@@ -408,6 +432,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#1A1A1A',
     borderWidth: 1,
+    borderColor: '#E5E7EB',
+  },
+  inputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  inputWithColor: {
+    flex: 1,
+  },
+  colorDot: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    borderWidth: 2,
     borderColor: '#E5E7EB',
   },
   startBtn: {
