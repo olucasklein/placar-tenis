@@ -27,6 +27,12 @@ Aplicativo de placar profissional para tênis desenvolvido com React Native e Ex
 - **Localização em português** - Interface totalmente em português
 - **Suporte a botões virtuais Android** - Layout adaptativo para diferentes dispositivos
 
+## 🎯 Roadmap
+
+- [ ] Sincronização cloud (Firebase)
+- [ ] Integração com uma tela externa para mostrar placar
+- [ ] Integração com Smart Watches
+
 ## 📋 Requisitos
 
 ### Desenvolvimiento
@@ -211,14 +217,6 @@ Certifique-se que `App.tsx` está envolvido com `<SafeAreaProvider>` da bibliote
 - Histórico limitado a 50 partidas para otimizar storage
 - Modo landscape forçado na tela de placar
 - Suporte a safe area para notched devices e botões virtuais
-
-## 🎯 Roadmap
-
-- [ ] Exportar estatísticas em PDF
-- [ ] Sincronização cloud (Firebase)
-- [ ] Modo online multiplayer
-- [ ] Análise de vídeo integrada
-- [ ] Integração com rankings
 
 ## 📄 Licença
 
