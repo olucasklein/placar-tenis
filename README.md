@@ -2,6 +2,17 @@
 
 Aplicativo de placar profissional para tênis desenvolvido com React Native e Expo.
 
+<table align="center">
+  <tr>
+    <td><img src="assets/app-img-1.jpg" width="100%"/></td>
+    <td><img src="assets/app-img-2.jpg" width="100%"/></td>
+  </tr>
+  <tr>
+    <td><img src="assets/app-img-3.jpg" width="100%"/></td>
+    <td></td>
+  </tr>
+</table>
+
 ## 🎾 Funcionalidades
 
 - **Placar em tempo real** - Acompanhamento de pontos, games e sets
