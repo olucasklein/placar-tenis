@@ -176,6 +176,7 @@ placar-tenis/
 ## 🌐 Tecnologias
 
 - **React Native** - Framework para desenvolvimento mobile
+- **Nativewind** - Biblioteca para criar aplicativos modernos e de alto desempenho para web e dispositivos móveis.
 - **Expo** - Plataforma para apps React Native
 - **TypeScript** - Tipagem estática
 - **AsyncStorage** - Persistência local de dados
